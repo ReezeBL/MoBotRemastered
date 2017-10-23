@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8CF00D20-4782-4D01-B3A9-285EF7A18698}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MoBot</RootNamespace>
+    <AssemblyName>MoBot</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>015 Beedrill.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.Math.2.2.5\lib\AForge.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="fNbt, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\fNbt.0.6.3\lib\net35-client\fNbt.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\GameData\Block.cs" />
+    <Compile Include="Core\GameData\Container.cs" />
+    <Compile Include="Core\GameData\Entities\Entity.cs" />
+    <Compile Include="Core\GameData\Entities\LivingEntity.cs" />
+    <Compile Include="Core\GameData\Entities\Mob.cs" />
+    <Compile Include="Core\GameData\Entities\Player.cs" />
+    <Compile Include="Core\GameData\ItemStack.cs" />
+    <Compile Include="Core\GameData\Items\Item.cs" />
+    <Compile Include="Core\GameData\Items\ItemFood.cs" />
+    <Compile Include="Core\GameData\Items\ItemTool.cs" />
+    <Compile Include="Core\GameData\World\Chunk.cs" />
+    <Compile Include="Core\GameData\World\GameWorld.cs" />
+    <Compile Include="Core\GameData\World\Section.cs" />
+    <Compile Include="Core\MoBase.cs" />
+    <Compile Include="Core\Net\Channel.cs" />
+    <Compile Include="Core\Net\Handlers\ClientHandler.cs" />
+    <Compile Include="Core\Net\Handlers\DefaultAuthHandler.cs" />
+    <Compile Include="Core\Net\Handlers\FmlHandler.cs" />
+    <Compile Include="Core\Net\Handlers\IAuthHandler.cs" />
+    <Compile Include="Core\Net\Handlers\ICustomHandler.cs" />
+    <Compile Include="Core\Net\Handlers\IHandler.cs" />
+    <Compile Include="Core\Net\NetworkManager.cs" />
+    <Compile Include="Core\Net\Packet.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\EmptyPacket.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketEncriptionRequest.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketEncriptionResponse.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketHandshake.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketLoginStart.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketLoginSuccess.cs" />
+    <Compile Include="Core\Net\Packets\Handshake\PacketResponse.cs" />
+    <Compile Include="Core\Net\Packets\PacketDisconnect.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketBlockChange.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketChat.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketChunkData.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketClickWindow.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketClientStatus.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketCloseWindow.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketConfirmTransaction.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketCustomPayload.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketDestroyEntities.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketEntity.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketEntityStatus.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketEntityTeleport.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketHeldItemChange.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketJoinGame.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketKeepAlive.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketMapChunk.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketMultiBlockChange.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketOpenWindow.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketPlayerAbilities.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketPlayerBlockPlacement.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketPlayerDigging.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketPlayerPosLook.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketRespawn.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketSetSlot.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketSpawnMob.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketSpawnObject.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketSpawnPlayer.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketUpdateHealth.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketUpdateTileEntity.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketUseEntity.cs" />
+    <Compile Include="Core\Net\Packets\Play\PacketWindowItems.cs" />
+    <Compile Include="Core\Net\StreamWrapper.cs" />
+    <Compile Include="Core\Plugins\IPlugin.cs" />
+    <Compile Include="Core\Plugins\PluginLoader.cs" />
+    <Compile Include="Core\Plugins\StaticContext.cs" />
+    <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\HttpHelper.cs" />
+    <Compile Include="Helpers\MathHekper.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Settings\blocks.json" />
+    <None Include="Settings\entities.json" />
+    <None Include="Settings\items.json" />
+    <None Include="Settings\materials.json" />
+    <None Include="Settings\mods.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="015 Beedrill.ico" />
+    <Content Include="Settings\format.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
