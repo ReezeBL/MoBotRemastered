@@ -17,22 +17,15 @@ namespace ExcaliburAuth
 
         public void Initialize()
         {
-            StaticContext.AuthHandler = this;
+            GlobalModules.AuthHandler = this;
         }
 
-        public void HandleAuth(string username, string password, string serverId)
+        public bool HandleAuth(string username, string password, string serverId)
         {
             var session = GetAuthSession(username, password);
-            var authParams = new Dictionary<string, string>
-            {
-                ["user"] = username,
-                ["sessionId"] = session,
-                ["serverId"] = serverId,
-            };
-            var content = new FormUrlEncodedContent(authParams);
-            var response = httpClient.PostAsync("http://ex-server.ru/joinserver.php", content).Result;
+            var response = httpClient.GetAsync($"http://ex-server.ru/joinserver.php?user={username}&sessionId={session}&serverId={serverId}").Result;
             var result = response.Content.ReadAsStringAsync().Result;
-            Console.WriteLine(result);
+            return result == "OK";
         }
 
         public string GetAuthSession(string username, string password)

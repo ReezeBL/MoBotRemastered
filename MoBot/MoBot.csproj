@@ -129,7 +129,7 @@
     <Compile Include="Core\Net\StreamWrapper.cs" />
     <Compile Include="Core\Plugins\IPlugin.cs" />
     <Compile Include="Core\Plugins\PluginLoader.cs" />
-    <Compile Include="Core\Plugins\StaticContext.cs" />
+    <Compile Include="Core\Plugins\GlobalModules.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
     <Compile Include="Helpers\HttpHelper.cs" />
     <Compile Include="Helpers\MathHekper.cs" />
@@ -146,15 +146,27 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="Settings\blocks.json" />
-    <None Include="Settings\entities.json" />
-    <None Include="Settings\items.json" />
-    <None Include="Settings\materials.json" />
-    <None Include="Settings\mods.json" />
+    <None Include="Settings\blocks.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Settings\entities.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Settings\items.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Settings\materials.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Settings\mods.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="015 Beedrill.ico" />
-    <Content Include="Settings\format.txt" />
+    <None Include="Settings\format.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

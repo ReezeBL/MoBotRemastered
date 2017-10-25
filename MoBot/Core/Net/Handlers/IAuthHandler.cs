@@ -2,6 +2,6 @@
 {
     public interface IAuthHandler
     {
-        void HandleAuth(string username, string password, string serverId);
+        bool HandleAuth(string username, string password, string serverId);
     }
 }

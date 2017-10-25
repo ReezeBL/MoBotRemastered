@@ -242,5 +242,9 @@
   {
     "modid": "MineTweaker3",
     "version": "3.0.10"
+  },
+  {
+    "modid": "more_records",
+    "version": "1.0"
   }
 ]

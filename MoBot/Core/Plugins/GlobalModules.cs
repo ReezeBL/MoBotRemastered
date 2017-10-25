@@ -2,7 +2,7 @@
 
 namespace MoBot.Core.Plugins
 {
-    public static class StaticContext
+    public static class GlobalModules
     {
         private static IAuthHandler authHandler;
 

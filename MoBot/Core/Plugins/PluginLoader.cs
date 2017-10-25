@@ -67,7 +67,7 @@ namespace MoBot.Core.Plugins
         {
             var pluginType = typeof(IPlugin);
             var plugins = extensionAssembly.GetTypes()
-                .Where(type => type.IsAssignableFrom(pluginType) && !type.IsAbstract && type.GetConstructor(Type.EmptyTypes) != null)
+                .Where(type => pluginType.IsAssignableFrom(type) && !type.IsAbstract && type.GetConstructor(Type.EmptyTypes) != null)
                 .Select(Activator.CreateInstance)
                 .Cast<IPlugin>().ToArray();
             foreach (var plugin in plugins)

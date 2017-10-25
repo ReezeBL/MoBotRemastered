@@ -4,6 +4,7 @@ using System.Net;
 using MoBot.Core.Net.Packets;
 using MoBot.Core.Net.Packets.Handshake;
 using MoBot.Core.Net.Packets.Play;
+using MoBot.Core.Plugins;
 using MoBot.Helpers;
 using NLog;
 using Org.BouncyCastle.Crypto;
@@ -82,12 +83,17 @@ namespace MoBot.Core.Net.Handlers
                 var serverId = HashHelper.GetServerIdHash(packetEncriptionRequest.ServerId, secretKey,
                     packetEncriptionRequest.Key);
 
-                var responseString = HttpHelper.PostUrl(baseInstance.UserSettings.Username,
-                    baseInstance.UserSettings.UserToken, serverId);
+                if (!GlobalModules.AuthHandler.HandleAuth(baseInstance.UserSettings.Username,
+                    baseInstance.UserSettings.UserToken, serverId))
+                {
+                    Logger.Error($"Auth failed!\nUsername: {baseInstance.UserSettings.Username}\nToken: {baseInstance.UserSettings.UserToken}");
+                }
+                //var responseString = HttpHelper.PostUrl(baseInstance.UserSettings.Username,
+                //    baseInstance.UserSettings.UserToken, serverId);
 
-                if (responseString != "OK")
-                    Logger.Error("Auth failed!\nAuth username: {1}\nAuth ID:{2}\nAuth response : {0}", responseString,
-                        baseInstance.UserSettings.Username, baseInstance.UserSettings.UserToken);
+                //if (responseString != "OK")
+                //    Logger.Error("Auth failed!\nAuth username: {1}\nAuth ID:{2}\nAuth response : {0}", responseString,
+                //        baseInstance.UserSettings.Username, baseInstance.UserSettings.UserToken);
             }
             catch (WebException)
             {
