@@ -18,19 +18,13 @@ namespace MoBot.Core.Plugins
         {
 
             var extensionsPath = Path.Combine(Environment.CurrentDirectory, ExtensionFolder);
-            string[] assemblies;
-
-            try
-            {
-                assemblies = Directory.GetFiles(extensionsPath, "*.dll");
-            }
-            catch (DirectoryNotFoundException)
+            if (!Directory.Exists(extensionsPath))
             {
                 Log.Error("Can't find Extensions folder, creating empty one");
                 Directory.CreateDirectory(extensionsPath);
-                return;
             }
 
+            var assemblies = Directory.GetFiles(extensionsPath, "*.dll");
             foreach (var assemblyPath in assemblies)
             {
                 Assembly assembly;

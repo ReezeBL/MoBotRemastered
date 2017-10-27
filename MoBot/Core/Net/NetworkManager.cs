@@ -69,7 +69,6 @@ namespace MoBot.Core.Net
                     var packet = Channel.GetPacket();
                     if(packet == null)
                         continue;
-                    Logger.Info(packet.GetType().Name);
                     if (packet.ProceedNow())
                         packet.HandlePacket(handler);
                     else

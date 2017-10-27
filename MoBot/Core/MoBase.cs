@@ -22,9 +22,11 @@ namespace MoBot.Core
         }
 
         internal NetworkManager NetworkManager { get; private set; }
-        public Settings.UserSettings UserSettings { get; private set; }
+        internal Settings.UserSettings UserSettings { get; private set; }
         internal IHandler PacketHandler { get; }
-        public ModInfo[] ModList { get; } = GetModList();
+        internal ModInfo[] ModList { get; } = GetModList();
+
+        public GameController GameController { get; private set; }
 
         public event EventHandler<string> Notify;
 
@@ -47,6 +49,8 @@ namespace MoBot.Core
                 OnNotify("Server is full");
                 return false;
             }
+
+            GameController = new GameController();
 
             var client = new TcpClient();
             await client.ConnectAsync(UserSettings.ServerIp, UserSettings.ServerPort);
