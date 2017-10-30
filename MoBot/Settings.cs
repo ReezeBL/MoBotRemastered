@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using NLog;
 
@@ -25,6 +26,12 @@ namespace MoBot
         [JsonRequired] private readonly Dictionary<string, string> compiledModules = new Dictionary<string, string>();
 
         private Settings() { }
+
+        public static string[] GetProfiles()
+        {
+            var settingsInstance = Deserialize();
+            return settingsInstance.userSettingses.Keys.ToArray();
+        }
 
         public static UserSettings LoadProfile(string profile)
         {

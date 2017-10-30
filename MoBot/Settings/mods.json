@@ -246,5 +246,9 @@
   {
     "modid": "more_records",
     "version": "1.0"
+  },
+  {
+    "modid": "AdvancedMachines",
+    "version": "1.0.9"
   }
 ]

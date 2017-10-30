@@ -51,7 +51,7 @@ namespace MoBot.Core.Pathfinder
             return $"({X} | {Y} | {Z})";
         }
 
-        public Location Prev;
+        internal Location Prev { get; set; }
 
         public Location(int x, int y, int z)
         {

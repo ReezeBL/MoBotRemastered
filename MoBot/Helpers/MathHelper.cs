@@ -1,6 +1,6 @@
 ﻿namespace MoBot.Helpers
 {
-    public static class MathHelper
+    internal static class MathHelper
     {
         public static int FloorFloat(float p)
         {

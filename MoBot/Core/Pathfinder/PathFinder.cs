@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using MoBot.Core.Game.AI.Pathfinding;
 using MoBot.Core.GameData;
+using MoBot.Core.GameData.World;
+using MoBot.Helpers;
 using NLog;
 using Priority_Queue;
 
@@ -9,24 +11,16 @@ namespace MoBot.Core.Pathfinder
 {
     internal static class PathFinder
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-        private static readonly Dictionary<int, Location> PointSet = new Dictionary<int, Location>();
-        private static readonly Dictionary<int, float> WeightSet = new Dictionary<int, float>();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        public static PathfinderContext Context { get; set; }
 
-        private static Location CreatePoint(int x, int y, int z)
+        public static Path Shovel(Location start, Location end, bool includeLast = true, bool digBlocs = true, float maxDistance = 64f, PathfinderContext context = null)
         {
-            var hash = Location.CalcHash(x, y, z);
-            if (PointSet.TryGetValue(hash, out Location result))
-                return result;
-            result = new Location(x, y, z);
-            return PointSet[hash] = result;
-        }
-
-        public static Path Shovel(Location start, Location end, bool includeLast = true, bool digBlocs = true, float maxDistance = 64f)
-        {
+            if (context == null)
+                context = Context;
             try
             {
-                var nodes = new FastPriorityQueue<Location>((int)maxDistance * (int)maxDistance * 255);
+                var nodes = new FastPriorityQueue<Location>((int) maxDistance * (int) maxDistance * 255);
                 var cost = new Dictionary<Location, float>();
                 var succeed = false;
 
@@ -34,7 +28,8 @@ namespace MoBot.Core.Pathfinder
                 start.Prev = null;
                 cost.Add(start, 0f);
 
-                var endCost = GetBlockWeight(end.X, end.Y, end.Z) + GetBlockWeight(end.X, end.Y + 1, end.Z);
+                var endCost = context.GetBlockWeight(end.X, end.Y, end.Z) +
+                              context.GetBlockWeight(end.X, end.Y + 1, end.Z);
                 if (endCost < 0)
                     return null;
 
@@ -47,7 +42,7 @@ namespace MoBot.Core.Pathfinder
                         succeed = true;
                         break;
                     }
-                    foreach (var node in AdvancedNeighbours(current))
+                    foreach (var node in AdvancedNeighbours(current, context))
                     {
                         var next = node.Item1;
                         if (next.Equals(end) && !includeLast)
@@ -57,9 +52,9 @@ namespace MoBot.Core.Pathfinder
                             break;
                         }
 
-                        if(node.Item2 < 0) continue;
-                        if(node.Item1.DistanceTo(start) > maxDistance) continue;
-                        if(!digBlocs && node.Item2 > 0) continue;
+                        if (node.Item2 < 0) continue;
+                        if (node.Item1.DistanceTo(start) > maxDistance) continue;
+                        if (!digBlocs && node.Item2 > 0) continue;
 
                         var nodeCost = cost[current] + 1f + node.Item2;
                         if (!cost.TryGetValue(next, out float nextCost))
@@ -75,16 +70,11 @@ namespace MoBot.Core.Pathfinder
                             next.Prev = current;
                         }
                     }
-                    if(succeed)
+                    if (succeed)
                         break;
                 }
                 if (!succeed)
-                {
-                    PointSet.Clear();
-                    WeightSet.Clear();
-                    GC.Collect();
                     return null;
-                }
 
                 var pathfrom = new List<Location>();
 
@@ -94,57 +84,78 @@ namespace MoBot.Core.Pathfinder
                     end = end.Prev;
                 }
 
-                PointSet.Clear();
-                WeightSet.Clear();
-                GC.Collect();
-
                 pathfrom.Reverse();
                 return new Path(pathfrom);
             }
             catch (Exception e)
             {
                 Log.Error($"Cant create path! Error : {e}");
-                PointSet.Clear();
                 return null;
+            }
+            finally
+            {
+                context.ResetBuffers();
+                GC.Collect();
             }
         }
 
-        public static IEnumerable<Tuple<Location, float>> AdvancedNeighbours(Location root)
+        private static IEnumerable<Tuple<Location, float>> AdvancedNeighbours(Location root, PathfinderContext context)
         {
 
-            yield return Tuple.Create(CreatePoint(root.X + 1, root.Y, root.Z),
-                GetBlockWeight(root.X + 1, root.Y, root.Z) + GetBlockWeight(root.X + 1, root.Y + 1, root.Z));
-            yield return Tuple.Create(CreatePoint(root.X - 1, root.Y, root.Z),
-                GetBlockWeight(root.X - 1, root.Y, root.Z) + GetBlockWeight(root.X - 1, root.Y + 1, root.Z));
-            yield return Tuple.Create(CreatePoint(root.X, root.Y, root.Z + 1),
-                GetBlockWeight(root.X, root.Y, root.Z + 1) + GetBlockWeight(root.X, root.Y + 1, root.Z + 1));
-            yield return Tuple.Create(CreatePoint(root.X, root.Y, root.Z - 1),
-                GetBlockWeight(root.X, root.Y, root.Z - 1) + GetBlockWeight(root.X, root.Y + 1, root.Z - 1));
-            yield return Tuple.Create(CreatePoint(root.X, root.Y + 1, root.Z), GetBlockWeight(root.X, root.Y + 2, root.Z));
+            yield return Tuple.Create(context.CreatePoint(root.X + 1, root.Y, root.Z),
+                context.GetBlockWeight(root.X + 1, root.Y, root.Z) + context.GetBlockWeight(root.X + 1, root.Y + 1, root.Z));
+            yield return Tuple.Create(context.CreatePoint(root.X - 1, root.Y, root.Z),
+                context.GetBlockWeight(root.X - 1, root.Y, root.Z) + context.GetBlockWeight(root.X - 1, root.Y + 1, root.Z));
+            yield return Tuple.Create(context.CreatePoint(root.X, root.Y, root.Z + 1),
+                context.GetBlockWeight(root.X, root.Y, root.Z + 1) + context.GetBlockWeight(root.X, root.Y + 1, root.Z + 1));
+            yield return Tuple.Create(context.CreatePoint(root.X, root.Y, root.Z - 1),
+                context.GetBlockWeight(root.X, root.Y, root.Z - 1) + context.GetBlockWeight(root.X, root.Y + 1, root.Z - 1));
+            yield return Tuple.Create(context.CreatePoint(root.X, root.Y + 1, root.Z), context.GetBlockWeight(root.X, root.Y + 2, root.Z));
 
             if (root.Y > 0)
             {
-                yield return Tuple.Create(CreatePoint(root.X, root.Y - 1, root.Z), GetBlockWeight(root.X, root.Y - 1, root.Z));
+                yield return Tuple.Create(context.CreatePoint(root.X, root.Y - 1, root.Z), context.GetBlockWeight(root.X, root.Y - 1, root.Z));
             }
         }
 
-        private static float GetBlockWeight(int x, int y, int z)
+        public class PathfinderContext
         {
-            var hash = Location.CalcHash(x, y, z);
-            if (WeightSet.TryGetValue(hash, out float weight))
-                return weight;
+            public PathfinderContext(GameWorld world)
+            {
+                World = world;
+            }
 
-            Block block = null;//Block.GetBlock(GameController.World.GetBlock(x, y, z));
-            if (block.Transparent)
-                return WeightSet[hash] = 0;
-            if (block.Hardness < 0)
-                return WeightSet[hash] = - 1e9f;
-            return WeightSet[hash] = block.Hardness * 5;
-        }
+            private GameWorld World { get; }
+            private Dictionary<int, Location> Locations { get; } = new Dictionary<int, Location>(8*64*64);
+            private Dictionary<int, float> Weights { get; } = new Dictionary<int, float>(8*64*64);
 
-        internal class Context
-        {
-            
+            public void ResetBuffers()
+            {
+                Locations.Clear();
+                Weights.Clear();
+            }
+
+            public Location CreatePoint(int x, int y, int z)
+            {
+                var hash = Location.CalcHash(x, y, z);
+                if (Locations.TryGetValue(hash, out var result))
+                    return result;
+                return Locations[hash] = new Location(x, y, z);
+            }
+
+            public float GetBlockWeight(int x, int y, int z)
+            {
+                var hash = Location.CalcHash(x, y, z);
+                if (Weights.TryGetValue(hash, out float weight))
+                    return weight;
+
+                Block block = Block.GetBlock(World.GetBlock(x, y, z));
+                if (block.Transparent)
+                    return Weights[hash] = 0;
+                if (block.Hardness < 0)
+                    return Weights[hash] = -1e9f;
+                return Weights[hash] = block.Hardness * 5;
+            }
         }
     }
 }

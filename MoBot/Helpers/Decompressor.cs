@@ -3,7 +3,7 @@ using System.IO.Compression;
 
 namespace MoBot.Helpers
 {
-    public static class Decompressor
+    internal static class Decompressor
     {
         // ZLib Decompressor.
         public static byte[] Decompress(byte[] data)
