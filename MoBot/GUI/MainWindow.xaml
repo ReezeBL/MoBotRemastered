@@ -24,7 +24,9 @@
                 <Grid x:Name="ProfileContent" Grid.Column="1"></Grid>
             </Grid>
         </TabItem>
-        <controls:ClosableTab></controls:ClosableTab>
+        <controls:ClosableTab Header="Omg it's alive!">
+            
+        </controls:ClosableTab>
     </TabControl>
     <Window.Resources>
         <Style x:Key="MainStyle">

@@ -15,28 +15,29 @@ namespace MoBot.Core
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
-        public MoBase()
+        public MoBase(string profile)
         {
             PacketHandler = new ClientHandler(this);
             PacketHandler.RegisterCustomHandler("FML|HS", new FmlHandler(this));
+
+            UserSettings = Settings.LoadProfile(profile);
+            Settings.SyncProfile(profile, UserSettings);
         }
 
         internal NetworkManager NetworkManager { get; private set; }
-        internal Settings.UserSettings UserSettings { get; private set; }
+        internal Settings.UserSettings UserSettings { get; }
         internal IHandler PacketHandler { get; }
         internal ModInfo[] ModList { get; } = GetModList();
 
         public GameController GameController { get; private set; }
+        public bool Connected => NetworkManager != null && NetworkManager.IsRunning;
 
         public event EventHandler<string> Notify;
 
-        public async Task<bool> Connect(string profile)
+        public async Task<bool> Connect()
         {
-            if (NetworkManager != null && NetworkManager.IsRunning)
+            if (Connected)
                 return false;
-
-            UserSettings = Settings.LoadProfile(profile);
-            Settings.SyncProfile(profile, UserSettings);
 
             var response = await Ping(UserSettings.ServerIp, UserSettings.ServerPort);
             if (response == null)
@@ -67,6 +68,7 @@ namespace MoBot.Core
             });
             NetworkManager.AddToSendingQueue(new PacketLoginStart {Name = UserSettings.Username});
 
+            
             return true;
         }
 
