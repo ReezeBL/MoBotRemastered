@@ -45,7 +45,7 @@ namespace ExcaliburLauncher.GUI.Viewers
         }
 
         public string Username { get; set; } = "Oleg";
-        public string Password { get; set; } = "Loh";
+        public string Password { get; set; } = "A8tOyUPOx21yr5xZfwTf+g==";
 
         public string JavaPath { get; set; } = GetDefaultJavaPath();
 
