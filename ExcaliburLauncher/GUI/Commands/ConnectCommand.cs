@@ -25,23 +25,23 @@ namespace ExcaliburLauncher.GUI.Commands
         public async void Execute(object parameter)
         {
             var authParams = await ExcaliburAuth.GetAuthSession(view.Username, view.Password);
-            Load(view.SelectedConfig, authParams);
+            //Load(view.SelectedConfig, authParams);
 
-            //var process = new Process();
-            //var startInfo = new ProcessStartInfo
-            //{
-            //    FileName = Path.Combine(view.JavaPath, "java.exe"),
-            //    WorkingDirectory = view.WorkingDirectory,
-            //    Arguments = GetArguments(view.SelectedConfig, authParams),
-            //    //CreateNoWindow = true,
-            //    //RedirectStandardOutput = true,
-            //    //UseShellExecute = false,
-            //};
+            var process = new Process();
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Path.Combine(view.JavaPath, "java.exe"),
+                WorkingDirectory = view.WorkingDirectory,
+                Arguments = GetArguments(view.SelectedConfig, authParams),
+                //CreateNoWindow = true,
+                //RedirectStandardOutput = true,
+                //UseShellExecute = false,
+            };
 
-            //process.StartInfo = startInfo;
-            ////process.OutputDataReceived += (sender, args) => Console.WriteLine("received output: {0}", args.Data);
-            //process.Start();
-            ////process.BeginOutputReadLine();
+            process.StartInfo = startInfo;
+            //process.OutputDataReceived += (sender, args) => Console.WriteLine("received output: {0}", args.Data);
+            process.Start();
+            //process.BeginOutputReadLine();
         }
 
         private string GetArguments(ExcaliburAuth.ServerConfig serverConfig, ExcaliburAuth.AuthData authData)
