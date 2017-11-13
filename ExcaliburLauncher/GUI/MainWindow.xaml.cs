@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using ExcaliburLauncher.GUI.Viewers;
+using System.Windows.Input;
 
 namespace ExcaliburLauncher.GUI
 {
@@ -12,8 +12,11 @@ namespace ExcaliburLauncher.GUI
         public MainWindow()
         {
             InitializeComponent();
-            var viewer = new MainWindowView();
-            DataContext = viewer;
+        }
+
+        private void SaveCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
-using ExcaliburLauncher.Core;
+using System.Windows.Threading;
 using ExcaliburLauncher.GUI;
 
 namespace ExcaliburLauncher
@@ -11,12 +10,17 @@ namespace ExcaliburLauncher
         [STAThread]
         private static void Main(string[] args)
         {
-            //var configs = ExcaliburAuth.GetConfig().Result;
-            //Console.WriteLine(string.Join("\n", configs.Select(config => config.Name)));
-            //Console.ReadLine();
             var application = new Application();
             var window = new MainWindow();
+            application.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             application.Run(window);
+        }
+
+        private static void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string errorMessage = $"{e.Exception.Message}";
+            MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            e.Handled = true;
         }
     }
 }

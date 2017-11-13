@@ -82,13 +82,15 @@ namespace ExcaliburLauncher.Core
                 Arguments = node.Element("arguments")?.Value;
             }
 
-            public string Name { get; }
+            public ServerConfig() { }
+
+            public string Name { get; set; }
             public string Directory { get; set; }
-            public string Version { get; }
-            public List<string> ClassPath { get; } = new List<string>();
-            public string MainClass { get; }
-            public string ExtraArguments { get; }
-            public string Arguments { get; }
+            public string Version { get; set; }
+            public List<string> ClassPath { get; set; } = new List<string>();
+            public string MainClass { get; set; }
+            public string ExtraArguments { get; set; }
+            public string Arguments { get; set; }
 
             public override string ToString()
             {

@@ -1,13 +1,14 @@
 ﻿<Window x:Class="ExcaliburLauncher.GUI.MainWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Height="450" Width="850" ResizeMode="CanMinimize" Title="ExLauncher" Icon="../015 Beedrill.ico" Style="{DynamicResource MainStyle}">
+             xmlns:viewers="clr-namespace:ExcaliburLauncher.GUI.Viewers"
+             Height="450" Width="850" ResizeMode="CanMinimize" Title="ExLauncher" Icon="../015 Beedrill.ico" Style="{DynamicResource MainStyle}" DataContext="{DynamicResource View}">
     <Grid ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
+        <StackPanel Grid.Row="0" DataContext="{Binding UserSettings}">
             <StackPanel Orientation="Horizontal" Margin="5">
                 <Label  MinWidth="100" Content="Login: "></Label>
                 <TextBox MinWidth="200" Text="{Binding Username}"></TextBox>
@@ -17,7 +18,7 @@
                 <TextBox MinWidth="200" Text="{Binding Password}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button Margin="5" Content="Connect" Command="{Binding ConnectCommand}"></Button>
+                <Button Margin="5" Content="Connect" DataContext="{DynamicResource View}" Command="{Binding ConnectCommand}"/>
             </StackPanel>
         </StackPanel>
         <Grid Grid.Row ="1" ShowGridLines="True">
@@ -26,18 +27,20 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column ="0" Margin="5" ItemsSource="{Binding Configs}" SelectedItem="{Binding SelectedConfig}"/>
-            <StackPanel Grid.Column="1" Margin="5">
+            <ListView Grid.Column ="0" Margin="5" ItemsSource="{Binding ServerConfigViews}" SelectedItem="{Binding SelectedConfig}" DisplayMemberPath="Name"/>
+            <StackPanel x:Name="ConfigPanel" Grid.Column="1" Margin="5">
                 <StackPanel Orientation="Horizontal" Margin="5">
                     <Label Content="JavaPath: " Width="150"></Label>
                     <TextBox MinWidth="200" Text="{Binding JavaPath}"></TextBox>
                     <Button Margin="5,0,0,0">...</Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="5" DataContext="{Binding SelectedConfig}">
                     <Label Content="Working Directory" Width="150" ></Label>
-                    <TextBox MinWidth="200" Text="{Binding WorkingDirectory}"></TextBox>
+                    <TextBox x:Name="WorkingDirectoryText" MinWidth="200" Text="{Binding Directory}"></TextBox>
                     <Button Margin="5,0,0,0">...</Button>
                 </StackPanel>
+                <Button HorizontalAlignment="Right" Margin="5,0,15,10" Command="{Binding SaveCommand}">Save</Button> 
+               
             </StackPanel>
         </Grid>
     </Grid>
@@ -46,6 +49,7 @@
             <Setter Property="Control.FontFamily" Value="Comic Sans MS"></Setter>
             <Setter Property="Control.FontSize" Value="16"></Setter>
         </Style>
+        <viewers:MainWindowView x:Key="View"></viewers:MainWindowView>
     </Window.Resources>
 </Window>
 

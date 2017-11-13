@@ -19,20 +19,21 @@ namespace ExcaliburLauncher.GUI.Commands
 
         public bool CanExecute(object parameter)
         {
-            return view.SelectedConfig != null && !string.IsNullOrEmpty(view.Username) && !string.IsNullOrEmpty(view.Password);
+            //return view.SelectedConfig != null && !string.IsNullOrEmpty(view.Username) && !string.IsNullOrEmpty(view.Password);
+            return true;
         }
 
         public async void Execute(object parameter)
         {
-            var authParams = await ExcaliburAuth.GetAuthSession(view.Username, view.Password);
+            //var authParams = await ExcaliburAuth.GetAuthSession(view.Username, view.Password);
             //Load(view.SelectedConfig, authParams);
 
             var process = new Process();
             var startInfo = new ProcessStartInfo
             {
                 FileName = Path.Combine(view.JavaPath, "java.exe"),
-                WorkingDirectory = view.WorkingDirectory,
-                Arguments = GetArguments(view.SelectedConfig, authParams),
+                //WorkingDirectory = view.WorkingDirectory,
+                //Arguments = GetArguments(view.SelectedConfig, authParams),
                 //CreateNoWindow = true,
                 //RedirectStandardOutput = true,
                 //UseShellExecute = false,
