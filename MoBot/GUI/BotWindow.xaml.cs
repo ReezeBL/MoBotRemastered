@@ -9,9 +9,11 @@ namespace MoBot.GUI
     /// </summary>
     public partial class BotWindow
     {
+        public MoBase BotInstance { get; }
         public BotWindow(MoBase instance)
         {
             InitializeComponent();
+            BotInstance = instance;
         }
     }
 }

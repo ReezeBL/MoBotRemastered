@@ -1,55 +1,47 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using MoBot.Annotations;
-using MoBot.Core.Plugins;
-using MoBot.GUI.Commands;
-
-namespace MoBot.GUI.View
+﻿namespace MoBot.GUI.View
 {
-    internal class UserSettingsView  : INotifyPropertyChanged
+    internal class UserSettingsView  : AbsractView
     {
-        private readonly Settings.UserSettings settings;
-        private readonly string profile;
-        private ICommand loadCommand;
+        public Settings.UserSettings Settings { get; private set; }
+        public string Profile { get; }
 
         public UserSettingsView(string profile)
         {
-            this.profile = profile;
-            settings = Settings.LoadProfile(profile);
+            Profile = profile;
+        }
+
+        public void Select()
+        {
+            Settings = MoBot.Settings.LoadProfile(Profile);
         }
 
         public string Username
         {
-            get => settings.Username;
-            set => settings.Username = value;
+            get => Settings.Username;
+            set => Settings.Username = value;
         }
 
-        public string ServerIP
+        public string Password
         {
-            get => settings.ServerIp;
-            set => settings.ServerIp = value;
+            get => Settings.UserToken;
+            set => Settings.UserToken = value;
+        }
+
+        public string ServerIp
+        {
+            get => Settings.ServerIp;
+            set => Settings.ServerIp = value;
         }
 
         public int ServerPort
         {
-            get => settings.ServerPort;
-            set => settings.ServerPort = value;
-        }
-
-        public ICommand LoadCommand => loadCommand ?? (loadCommand = new LoadProfile(profile));
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => Settings.ServerPort;
+            set => Settings.ServerPort = value;
         }
 
         public void SaveProfile()
         {
-            Settings.SyncProfile(profile, settings);
+            MoBot.Settings.SyncProfile(Profile, Settings);
         }
     }
 }

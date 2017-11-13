@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MoBot.Core.Net.Handlers;
 
 namespace MoBot.Core.Plugins
@@ -18,5 +19,10 @@ namespace MoBot.Core.Plugins
         public static void AddProfile(string profile, MoBase instance) => InstancesInWork.Add(profile, instance);
         public static void UnloadProfile(string profile) => InstancesInWork.Remove(profile);
 
+        public static void UnloadInstance(MoBase instance)
+        {
+            var instanceKey = InstancesInWork.FirstOrDefault(pair => pair.Value == instance).Key ?? "";
+            InstancesInWork.Remove(instanceKey);
+        }
     }
 }

@@ -12,10 +12,6 @@ namespace MoBot.GUI
         public MainWindow()
         {
             InitializeComponent();
-
-            var viewer = new MainWindowView(this);
-            DataContext = viewer;
-            
         }
     }
 }
