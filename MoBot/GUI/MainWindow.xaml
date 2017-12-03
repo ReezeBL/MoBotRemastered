@@ -6,7 +6,7 @@
              xmlns:controls="clr-namespace:MoBot.GUI.Controls"
              xmlns:view="clr-namespace:MoBot.GUI.View"
              mc:Ignorable="d" 
-             Width="600" Height="450" Style="{DynamicResource MainStyle}" DataContext="{DynamicResource View}">
+             Width="600" Height="450" DataContext="{DynamicResource View}">
     <TabControl x:Name="WindowTabs">
         <TabItem Header="Loader">
             <Grid ShowGridLines="True">
@@ -24,14 +24,6 @@
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock MinWidth="100">Password:</TextBlock>
                             <TextBox MinWidth="150" Text="{Binding Password}" Margin="5,0,0,0"></TextBox>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock MinWidth="100">Server IP:</TextBlock>
-                            <TextBox MinWidth="150" Text="{Binding ServerIp}" Margin="5,0,0,0"></TextBox>
-                        </StackPanel >
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock MinWidth="100">Server Port:</TextBlock>
-                            <TextBox MinWidth="150" Text="{Binding ServerPort}" Margin="5,0,0,0"></TextBox>
                         </StackPanel>
                         <Expander Header="Additional settings">
                             <StackPanel>

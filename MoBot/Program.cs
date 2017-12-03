@@ -7,24 +7,26 @@ using MoBot.GUI;
 
 namespace MoBot
 {
-    internal class Program
+    internal static class Program
     {
         [STAThread]
         public static void Main(string[] args)
         {
             PluginLoader.LoadPlugins();
-            var application = new Application();
-            var window = new MainWindow();
-            application.Run(window);
-            //var instance = new MoBase();
+            var application = new App();
+            application.Run();
+         
+            //var instance = new MoBase("Default");
+            //var profile = Settings.LoadProfile("Default");
             //instance.Notify += (sender, message) => Console.WriteLine(message);
             //Task<bool> task;
             //do
             //{
-            //    task = instance.Connect("Default");
-            //    if (!task.Result)
-            //        Console.WriteLine("Connection failed");
-            //} while (!task.Result);
+            //    task = instance.Connect();
+            //    if(task.Result == false)
+            //        Console.WriteLine("Connection failed!");
+            //} while (task.Result == false);
+            //Console.WriteLine(task.Result);
             //Console.ReadLine();
         }
     }

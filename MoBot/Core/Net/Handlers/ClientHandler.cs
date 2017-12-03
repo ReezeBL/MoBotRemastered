@@ -35,9 +35,9 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketBlockChange(PacketBlockChange packetBlockChange)
         {
-            baseInstance.GameController.World.SetBlock(packetBlockChange.X, packetBlockChange.Y, packetBlockChange.Z,
+            baseInstance.IngameData.World.SetBlock(packetBlockChange.X, packetBlockChange.Y, packetBlockChange.Z,
                 packetBlockChange.BlockId);
-            baseInstance.GameController.World.Invalidate();
+            baseInstance.IngameData.World.Invalidate();
         }
 
         public void HandlePacketChat(PacketChat packetChat)
@@ -84,7 +84,10 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketDestroyEntities(PacketDestroyEntities packetDestroyEntities)
         {
-            throw new NotImplementedException();
+            foreach (var entityId in packetDestroyEntities.IdList)
+            {
+                baseInstance.IngameData.RemoveEntity(entityId);
+            }
         }
 
         public void HandlePacketDisconnect(PacketDisconnect packetDisconnect)
@@ -141,7 +144,7 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketEntity(PacketEntity packetEntity)
         {
-            var entity = baseInstance.GameController.GetEntity(packetEntity.EntityId) as LivingEntity;
+            var entity = baseInstance.IngameData.GetEntity(packetEntity.EntityId) as LivingEntity;
             entity?.Move(packetEntity.X, packetEntity.Y, packetEntity.Z);
         }
 
@@ -152,18 +155,18 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketEntityTeleport(PacketEntityTeleport packetEntityTeleport)
         {
-            var entity = baseInstance.GameController.GetEntity(packetEntityTeleport.EntityId) as LivingEntity;
+            var entity = baseInstance.IngameData.GetEntity(packetEntityTeleport.EntityId) as LivingEntity;
             entity?.SetPosition(packetEntityTeleport.X, packetEntityTeleport.Y, packetEntityTeleport.Z);
         }
 
         public void HandlePacketHeldItemChange(PacketHeldItemChange packetHeldItemChange)
         {
-            baseInstance.GameController.Player.HeldItemBar = packetHeldItemChange.Slot;
+            baseInstance.IngameData.Player.HeldItemBar = packetHeldItemChange.Slot;
         }
 
         public void HandlePacketJoinGame(PacketJoinGame packetJoinGame)
         {
-            baseInstance.GameController.CreateUser(packetJoinGame.EntityId, baseInstance.UserSettings.Username);
+            baseInstance.IngameData.CreateUser(packetJoinGame.EntityId, baseInstance.UserSettings.Username);
         }
 
         public void HandlePacketKeepAlive(PacketKeepAlive packetKeepAlive)
@@ -185,7 +188,7 @@ namespace MoBot.Core.Net.Handlers
             for (var i = 0; i < packetMapChunk.ChunkNumber; i++)
             {
                 dced = packetMapChunk.Chunks[i].GetData(dced);
-                baseInstance.GameController.World.AddChunk(packetMapChunk.Chunks[i]);
+                baseInstance.IngameData.World.AddChunk(packetMapChunk.Chunks[i]);
             }
         }
 
@@ -205,7 +208,7 @@ namespace MoBot.Core.Net.Handlers
                 var x = short1 >> 12 & 15;
                 var z = short1 >> 8 & 15;
                 var y = short1 & 255;
-                baseInstance.GameController.World.SetBlock(chunkX + x, y, chunkZ + z, id);
+                baseInstance.IngameData.World.SetBlock(chunkX + x, y, chunkZ + z, id);
             }
         }
 
@@ -216,11 +219,11 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketPlayerPosLook(PacketPlayerPosLook packetPlayerPosLook)
         {
-            baseInstance.GameController.Player.SetPosition(packetPlayerPosLook.X, packetPlayerPosLook.Y -= 1.62,
+            baseInstance.IngameData.Player.SetPosition(packetPlayerPosLook.X, packetPlayerPosLook.Y -= 1.62,
                 packetPlayerPosLook.Z);
-            baseInstance.GameController.Player.Yaw = packetPlayerPosLook.Yaw;
-            baseInstance.GameController.Player.Pitch = packetPlayerPosLook.Pitch;
-            baseInstance.GameController.Player.OnGround = packetPlayerPosLook.OnGround;
+            baseInstance.IngameData.Player.Yaw = packetPlayerPosLook.Yaw;
+            baseInstance.IngameData.Player.Pitch = packetPlayerPosLook.Pitch;
+            baseInstance.IngameData.Player.OnGround = packetPlayerPosLook.OnGround;
 
             //GameController.AiHandler.Mover.Stop();
             baseInstance.NetworkManager.AddToSendingQueue(packetPlayerPosLook);
@@ -230,7 +233,7 @@ namespace MoBot.Core.Net.Handlers
         {
             try
             {
-                baseInstance.GameController.Player.GetContainer(packetSetSlot.WindowId)[packetSetSlot.Slot] =
+                baseInstance.IngameData.Player.GetContainer(packetSetSlot.WindowId)[packetSetSlot.Slot] =
                     packetSetSlot.ItemStack;
             }
             catch (Exception e)
@@ -242,33 +245,33 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketSpawnMoob(PacketSpawnMob packetSpawnMob)
         {
-            var mob = baseInstance.GameController.CreateMob(packetSpawnMob.EntityId, packetSpawnMob.Type);
+            var mob = baseInstance.IngameData.CreateMob(packetSpawnMob.EntityId, packetSpawnMob.Type);
             mob?.SetPosition(packetSpawnMob.X, packetSpawnMob.Y, packetSpawnMob.Z);
         }
 
         public void HandlePacketSpawnObject(PacketSpawnObject packetSpawnObject)
         {
-            var entity = baseInstance.GameController.CreateEntity(packetSpawnObject.EntityId, packetSpawnObject.Type);
+            var entity = baseInstance.IngameData.CreateEntity(packetSpawnObject.EntityId, packetSpawnObject.Type);
             entity?.SetPosition(packetSpawnObject.X, packetSpawnObject.Y, packetSpawnObject.Z);
         }
 
         public void HandlePacketSpawnPlayer(PacketSpawnPlayer packetSpawnPlayer)
         {
-            var player = baseInstance.GameController.CreatePlayer(packetSpawnPlayer.EntityId, packetSpawnPlayer.Name);
+            var player = baseInstance.IngameData.CreatePlayer(packetSpawnPlayer.EntityId, packetSpawnPlayer.Name);
             player?.SetPosition(packetSpawnPlayer.X, packetSpawnPlayer.Y, packetSpawnPlayer.Z);
         }
 
         public void HandlePacketUpdateHealth(PacketUpdateHealth packetUpdateHelath)
         {
-            baseInstance.GameController.Player.Health = packetUpdateHelath.Health;
-            baseInstance.GameController.Player.Food = packetUpdateHelath.Food;
-            baseInstance.GameController.Player.Saturation = packetUpdateHelath.Saturation;
+            baseInstance.IngameData.Player.Health = packetUpdateHelath.Health;
+            baseInstance.IngameData.Player.Food = packetUpdateHelath.Food;
+            baseInstance.IngameData.Player.Saturation = packetUpdateHelath.Saturation;
         }
 
         public void HandlePacketWindowItems(PacketWindowItems packetWindowItems)
         {
-            var container = baseInstance.GameController.Player.GetContainer(packetWindowItems.WindowId) ??
-                            baseInstance.GameController.Player.CreateContainer(packetWindowItems.WindowId,
+            var container = baseInstance.IngameData.Player.GetContainer(packetWindowItems.WindowId) ??
+                            baseInstance.IngameData.Player.CreateContainer(packetWindowItems.WindowId,
                                 packetWindowItems.ItemCount - 36);
             for (var i = 0; i < packetWindowItems.ItemCount; i++)
                 container[i] = packetWindowItems.ItemsStack[i];
@@ -291,7 +294,7 @@ namespace MoBot.Core.Net.Handlers
 
         public void HandlePacketUpdateTileEntity(PacketUpdateTileEntity packetUpdateTileEntity)
         {
-            baseInstance.GameController.SetTileEntity(
+            baseInstance.IngameData.SetTileEntity(
                 new Location(packetUpdateTileEntity.X, packetUpdateTileEntity.Y, packetUpdateTileEntity.Z),
                 packetUpdateTileEntity.Root);
         }

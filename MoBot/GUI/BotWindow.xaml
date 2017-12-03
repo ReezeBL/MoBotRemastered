@@ -3,18 +3,77 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        mc:Ignorable="d" 
-             Height="450" Width="600" Style="{DynamicResource MainStyle}" ResizeMode="CanMinimize">
+             xmlns:view="clr-namespace:MoBot.GUI.View"
+             mc:Ignorable="d" 
+             Height="450" Width="600" ResizeMode="CanMinimize">
     <TabControl>
-        <TabItem Header="Connection">
-            
+        <TabItem Header="Connection" DataContext="{Binding Connection}">
+            <StackPanel Margin="15">
+                <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray">
+                    <StackPanel>
+                        <StackPanel DataContext="{Binding Settings}">
+                            <StackPanel Margin="5,35,0,15" Orientation="Horizontal" >
+                                <TextBlock MinWidth="100">Server IP:</TextBlock>
+                                <TextBox Margin="5,0,0,0" MinWidth="100" Text="{Binding ServerIp}"></TextBox>
+                            </StackPanel>
+                            <StackPanel Margin="5,0,0,15" Orientation="Horizontal">
+                                <TextBlock MinWidth="100">Server Port:</TextBlock>
+                                <TextBox Margin="5,0,0,0" MinWidth="100" Text="{Binding ServerPort}"></TextBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="25,15,0,0">
+                            <Button HorizontalAlignment="Left" MinWidth="100" Command="{Binding Save}">Save</Button>
+                            <Button MinWidth="100" Margin="25,0,0,0" Command="{Binding Connect}">Connect</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border CornerRadius="6" BorderThickness="2" BorderBrush="Gray" Margin="0,15,0,0">
+                    <StackPanel>
+                        <StackPanel Margin="5,15,0,15" Orientation="Horizontal">
+                            <Label MinWidth="100">Status:</Label>
+                            <Label>
+                                <Label.Style>
+                                    <Style TargetType="Label">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Connected}" Value="True">
+                                                <Setter Property="Content" Value="Connected"></Setter>
+                                                <Setter Property="Foreground" Value="Green"></Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Connected}" Value="False">
+                                                <Setter Property="Content" Value="Not Connected"></Setter>
+                                                <Setter Property="Foreground" Value="Red"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Label.Style>
+                            </Label>
+                        </StackPanel>
+                        <CheckBox Margin="5,0,0,15" IsChecked="{Binding Path=AutoReconnect}">Automatic reconnection</CheckBox>
+                        <StackPanel Margin="5,0,0,15" Orientation="Horizontal">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AutoReconnect}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding AutoReconnect}" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <TextBlock MinWidth="100">Reconnect delay:</TextBlock>
+                            <TextBox Margin="5,0,0,0" MinWidth="100" Text="{Binding ReconnectDelay}"></TextBox>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </TabItem>
     </TabControl>
-    
+    <Window.DataContext>
+        <view:MoBaseView x:Name="View"></view:MoBaseView>
+    </Window.DataContext>
     <Window.Resources>
-        <Style x:Key="MainStyle">
-            <Setter Property="Control.FontFamily" Value="Comic Sans MS"></Setter>
-            <Setter Property="Control.FontSize" Value="16"></Setter>
-        </Style>
+        <BooleanToVisibilityConverter x:Key="boolToVis"></BooleanToVisibilityConverter>
     </Window.Resources>
 </Window>

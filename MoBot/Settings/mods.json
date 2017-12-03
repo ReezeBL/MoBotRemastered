@@ -250,5 +250,53 @@
   {
     "modid": "AdvancedMachines",
     "version": "1.0.9"
+  },
+  {
+    "modid": "Botany",
+    "version": "2.0-pre14"
+  },
+  {
+    "modid": "customnpcs",
+    "version": "1.7.1d"
+  },
+  {
+    "modid": "economy",
+    "version": "2.5.0"
+  },
+  {
+    "modid": "stalker_models",
+    "version": "1.0"
+  },
+  {
+    "modid": "PowerUtils",
+    "version": "1.7.10-1.0.4"
+  },
+  {
+    "modid": "ExtraTrees",
+    "version": "2.0-pre14"
+  },
+  {
+    "modid": "BinnieCore",
+    "version": "2.0-pre14"
+  },
+  {
+    "modid": "Genetics",
+    "version": "2.0-pre14"
+  },
+  {
+    "modid": "spawn-world",
+    "version": "1.0"
+  },
+  {
+    "modid": "ExtraBees",
+    "version": "2.0-pre14"
+  },
+  {
+    "modid": "custom_model_api",
+    "version": "1.0"
+  },
+  {
+    "modid": "GalaxySpace",
+    "version": "1.1.4"
   }
 ]

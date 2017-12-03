@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Threading;
 using ExcaliburLauncher.GUI;
 
 namespace ExcaliburLauncher
 {
-    internal class Program
+    internal static class Program
     {
         [STAThread]
         private static void Main(string[] args)
@@ -18,7 +17,7 @@ namespace ExcaliburLauncher
 
         private static void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            string errorMessage = $"{e.Exception.Message}";
+            var errorMessage = $"{e.Exception.Message}";
             MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             e.Handled = true;
         }

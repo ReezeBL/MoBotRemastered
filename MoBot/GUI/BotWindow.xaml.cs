@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using MoBot.Core;
+using MoBot.Core.Plugins;
 
 namespace MoBot.GUI
 {
@@ -9,11 +10,17 @@ namespace MoBot.GUI
     /// </summary>
     public partial class BotWindow
     {
-        public MoBase BotInstance { get; }
-        public BotWindow(MoBase instance)
+        public MoBase BotInstance { get; private set; }
+
+        public BotWindow()
         {
             InitializeComponent();
-            BotInstance = instance;
+        }
+
+        public void SetProfile(string profile)
+        {
+            BotInstance = GlobalModules.GetProfile(profile);
+            View.Profile = profile;
         }
     }
 }

@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using MoBot.Annotations;
 using MoBot.Core.Net;
 using MoBot.Core.Net.Handlers;
 using MoBot.Core.Net.Packets.Handshake;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
+using System.Collections.Generic;
 
 namespace MoBot.Core
 {
-    public class MoBase
+    public sealed class MoBase
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
 
@@ -26,10 +31,10 @@ namespace MoBot.Core
 
         internal NetworkManager NetworkManager { get; private set; }
         internal Settings.UserSettings UserSettings { get; }
-        internal IHandler PacketHandler { get; }
+        private IHandler PacketHandler { get; }
         internal ModInfo[] ModList { get; } = GetModList();
 
-        public GameController GameController { get; private set; }
+        public IngameData IngameData { get; private set; }
         public bool Connected => NetworkManager != null && NetworkManager.IsRunning;
 
         public event EventHandler<string> Notify;
@@ -51,7 +56,7 @@ namespace MoBot.Core
                 return false;
             }
 
-            GameController = new GameController();
+            IngameData = new IngameData();
 
             var client = new TcpClient();
             await client.ConnectAsync(UserSettings.ServerIp, UserSettings.ServerPort);
@@ -72,7 +77,7 @@ namespace MoBot.Core
             return true;
         }
 
-        public async Task<dynamic> Ping(string ip, int port)
+        public static async Task<dynamic> Ping(string ip, int port)
         {
             var client = new TcpClient();
             var connection = client.ConnectAsync(ip, port);
@@ -110,7 +115,7 @@ namespace MoBot.Core
             NetworkManager.StopThreads();
         }
 
-        public virtual void OnNotify(string e)
+        public void OnNotify(string e)
         {
             Notify?.Invoke(this, e);
         }
@@ -127,10 +132,27 @@ namespace MoBot.Core
             return result;
         }
 
+        [UsedImplicitly]
         public class ModInfo
         {
-            public string modid;
-            public string version;
+            [UsedImplicitly] public string modid;
+            [UsedImplicitly] public string version;
+
+            public override bool Equals(object obj)
+            {
+                var info = obj as ModInfo;
+                return info != null &&
+                       modid == info.modid &&
+                       version == info.version;
+            }
+
+            public override int GetHashCode()
+            {
+                var hashCode = -1352133099;
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(modid);
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(version);
+                return hashCode;
+            }
         }
     }
 }

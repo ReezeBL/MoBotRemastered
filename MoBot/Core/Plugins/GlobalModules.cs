@@ -17,6 +17,8 @@ namespace MoBot.Core.Plugins
 
         public static bool IsProfileLoaded(string profile) => InstancesInWork.ContainsKey(profile);
         public static void AddProfile(string profile, MoBase instance) => InstancesInWork.Add(profile, instance);
+        public static MoBase GetProfile(string profile) => InstancesInWork[profile];
+
         public static void UnloadProfile(string profile) => InstancesInWork.Remove(profile);
 
         public static void UnloadInstance(MoBase instance)

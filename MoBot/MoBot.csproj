@@ -71,7 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\GameController.cs" />
+    <Compile Include="Core\IngameData.cs" />
     <Compile Include="Core\GameData\Block.cs" />
     <Compile Include="Core\GameData\Container.cs" />
     <Compile Include="Core\GameData\Entities\Entity.cs" />
@@ -156,6 +156,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\View\AbsractView.cs" />
+    <Compile Include="GUI\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GUI\View\MainWindowView.cs" />
     <Compile Include="GUI\View\MoBaseView.cs" />
     <Compile Include="GUI\View\UserSettingsView.cs" />
@@ -211,6 +214,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GUI\Themes\ShinyBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GUI\Themes\ExpressionDark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
