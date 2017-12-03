@@ -80,8 +80,12 @@ namespace MoBot.GUI.View
 
             private void OnDisconnect()
             {
-                if(AutoReconnect && Connect.CanExecute(null))
+                if (AutoReconnect && Connect.CanExecute(null))
                     Connect.Execute(true);
+                else
+                {
+                    Connected = false;
+                }
             }
 
             public UserSettingsView Settings
