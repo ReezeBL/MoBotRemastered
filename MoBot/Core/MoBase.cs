@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using MoBot.Annotations;
 using MoBot.Core.Net;
 using MoBot.Core.Net.Handlers;
@@ -38,6 +35,7 @@ namespace MoBot.Core
         public bool Connected => NetworkManager != null && NetworkManager.IsRunning;
 
         public event EventHandler<string> Notify;
+        public event EventHandler<string> OnDisconnect;
 
         public async Task<bool> Connect()
         {
@@ -110,9 +108,10 @@ namespace MoBot.Core
             }
         }
 
-        public void Disconnect()
+        public void Disconnect(string reason)
         {
             NetworkManager.StopThreads();
+            OnDisconnect?.Invoke(this, reason);
         }
 
         public void OnNotify(string e)
