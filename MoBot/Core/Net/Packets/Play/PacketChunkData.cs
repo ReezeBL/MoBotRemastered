@@ -11,7 +11,7 @@ namespace MoBot.Core.Net.Packets.Play
         public int Length;
         public bool RemoveChunk;
         public int X, Z;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketChunkData(this);
         }

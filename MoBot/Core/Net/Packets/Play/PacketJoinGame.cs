@@ -12,7 +12,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte MaxPlayers;
         public string LevelType;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketJoinGame(this);
         }

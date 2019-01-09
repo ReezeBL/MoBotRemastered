@@ -10,7 +10,7 @@ namespace MoBot.Core.Net.Packets.Play
         public float Pitch;
         public float Yaw;
         public bool OnGround;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketPlayerPosLook(this);
         }

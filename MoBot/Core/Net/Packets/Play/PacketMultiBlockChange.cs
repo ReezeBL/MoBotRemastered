@@ -10,7 +10,7 @@ namespace MoBot.Core.Net.Packets.Play
         public int Size;
         public int Length;
         public byte[] Metadata;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketMultiBlockChange(this);
         }

@@ -6,7 +6,7 @@ namespace MoBot.Core.Net.Packets
     internal class PacketDisconnect : Packet
     {
         public string Reason;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketDisconnect(this);
         }

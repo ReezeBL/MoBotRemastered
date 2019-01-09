@@ -17,15 +17,20 @@ using Org.BouncyCastle.Security;
 
 namespace MoBot.Core.Net.Handlers
 {
-    internal class ClientHandler : IHandler
+    public class ClientHandler
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Dictionary<string , ICustomHandler> customPayloadHandlers = new Dictionary<string, ICustomHandler>();
-        private readonly MoBase baseInstance;
 
-        public ClientHandler(MoBase baseInstance)
+        private readonly Dictionary<string, ICustomHandler> customPayloadHandlers =
+            new Dictionary<string, ICustomHandler>();
+        
+        private readonly Dictionary<Type, Action<object>> callbacks = new Dictionary<Type, Action<object>>();
+        
+        /* private readonly MoBase baseInstance; */
+
+        internal ClientHandler()
         {
-            this.baseInstance = baseInstance;
+            
         }
 
         public void RegisterCustomHandler(string channel, ICustomHandler customHandler)
@@ -33,7 +38,22 @@ namespace MoBot.Core.Net.Handlers
             customPayloadHandlers.Add(channel, customHandler);
         }
 
-        public void HandlePacketBlockChange(PacketBlockChange packetBlockChange)
+        public void RegisterPacketCallback<T>(Action<T> handler) where T : Packet
+        {
+            var packetType = typeof(T);
+            callbacks.TryGetValue(packetType, out var callback);
+            callback += o => handler((T)o);
+            callbacks[packetType] = callback;
+        }
+
+        internal void ProcessPacket(Packet packet)
+        {
+            var packetType = packet.GetType();
+            if(callbacks.TryGetValue(packetType, out var callback))
+                callback?.Invoke(packet);
+        }
+
+        /*public void HandlePacketBlockChange(PacketBlockChange packetBlockChange)
         {
             baseInstance.IngameData.World.SetBlock(packetBlockChange.X, packetBlockChange.Y, packetBlockChange.Z,
                 packetBlockChange.BlockId);
@@ -93,7 +113,7 @@ namespace MoBot.Core.Net.Handlers
         public void HandlePacketDisconnect(PacketDisconnect packetDisconnect)
         {
             baseInstance.OnNotify($"Disconnected from server: {packetDisconnect.Reason}");
-            baseInstance.Disconnect();
+            baseInstance.Disconnect(packetDisconnect.Reason);
         }
 
         public void HandlePacketEncriptionRequest(PacketEncriptionRequest packetEncriptionRequest)
@@ -297,6 +317,6 @@ namespace MoBot.Core.Net.Handlers
             baseInstance.IngameData.SetTileEntity(
                 new Location(packetUpdateTileEntity.X, packetUpdateTileEntity.Y, packetUpdateTileEntity.Z),
                 packetUpdateTileEntity.Root);
-        }
+        }*/
     }
 }

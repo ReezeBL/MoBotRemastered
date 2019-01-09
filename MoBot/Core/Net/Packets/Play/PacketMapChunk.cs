@@ -11,7 +11,7 @@ namespace MoBot.Core.Net.Packets.Play
         public bool Flag;
         public Chunk[] Chunks;
         public byte[] ChunkData;        
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketMapChunk(this);
         }

@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
         public string Channel;
         public byte[] Payload;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketCustomPayload(this);
         }

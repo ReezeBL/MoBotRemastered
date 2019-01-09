@@ -12,7 +12,7 @@ namespace MoBot.Core.Net.Packets.Play
         public short ActionNumber;
         public byte Mode;
         public ItemStack ItemStack;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

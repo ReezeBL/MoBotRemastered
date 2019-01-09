@@ -9,7 +9,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte Type;
         public double X, Y, Z;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketSpawnMoob(this);
         }

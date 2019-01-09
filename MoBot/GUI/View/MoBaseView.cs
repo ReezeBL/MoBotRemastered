@@ -75,7 +75,7 @@ namespace MoBot.GUI.View
             {
                 if (context != null && AutoReconnect)
                     await Task.Delay(ReconnectDelay);
-                Connected = await baseView.instance.Connect();
+               // Connected = await baseView.instance.Connect();
             }
 
             private void OnDisconnect()

@@ -13,7 +13,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte[] NbtData;
         public NbtCompound Root;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketUpdateTileEntity(this);
         }

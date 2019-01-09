@@ -26,13 +26,13 @@ namespace MoBot.GUI.Commands
 
         public bool CanExecute(object parameter)
         {
-            return !TryingToConnect && !instance.Connected;
+            return !TryingToConnect;// && !instance.Connected;
         }
 
         public async void Execute(object parameter)
         {
             TryingToConnect = true;
-            await instance.Connect();
+            //await instance.Connect();
             TryingToConnect = false;
         }
 

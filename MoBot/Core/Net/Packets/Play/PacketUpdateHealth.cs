@@ -8,7 +8,7 @@ namespace MoBot.Core.Net.Packets.Play
         public float Health;
         public short Food;
         public float Saturation;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketUpdateHealth(this);
         }

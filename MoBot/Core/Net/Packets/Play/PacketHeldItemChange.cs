@@ -5,7 +5,7 @@ namespace MoBot.Core.Net.Packets.Play
     internal class PacketHeldItemChange : Packet
     {
         public byte Slot;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketHeldItemChange(this);
         }

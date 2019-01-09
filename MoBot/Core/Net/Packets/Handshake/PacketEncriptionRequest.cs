@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Handshake
         public byte[] Key;
         public string ServerId;
         public byte[] Token { get; set; }
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketEncriptionRequest(this);
         }

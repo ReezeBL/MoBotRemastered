@@ -4,7 +4,7 @@ namespace MoBot.Core.Net.Packets.Handshake
 {
     internal class PacketLoginSuccess : Packet
     {
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketLoginSucess(this);
         }

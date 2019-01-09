@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte Flags;
         public float FlyingSpeed;
         public float ViewModifier;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketPlayerAbliities(this);
         }

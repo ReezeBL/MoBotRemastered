@@ -5,7 +5,7 @@ namespace MoBot.Core.Net.Packets.Play
     internal class PacketCloseWindow : Packet
     {
         public byte WindowId;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketCloseWindow(this);
         }

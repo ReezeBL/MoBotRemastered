@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using MoBot.Core.Net.Packets;
 using MoBot.Core.Net.Packets.Handshake;
 using MoBot.Core.Net.Packets.Play;
@@ -14,7 +17,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace MoBot.Core.Net
 {
-    internal class Channel
+    public class Channel
     {
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
         
@@ -25,9 +28,16 @@ namespace MoBot.Core.Net
             Ping
         }
 
-        private StreamWrapper channel;
+        private TcpClient client;
+        private StreamWrapper streamWrapper;
+        
+        public State ChannelState { get; set; }
 
-        private readonly HashSet<int> ignoredIds = new HashSet<int>
+        private readonly Dictionary<int, Type>[] forwardMaps;
+        private readonly Dictionary<Type, int>[] backwardMaps;
+        
+        private static readonly StreamWrapper PacketBuffer = new StreamWrapper();
+        private static readonly HashSet<int> IgnoredIds = new HashSet<int>
         {
             3, //PacketTimeUpdate
             4, //PacketEntityEquipment
@@ -55,6 +65,9 @@ namespace MoBot.Core.Net
             62, //PacketTeams
             -26, //Говно с экскалибура
         };
+        
+        /*
+        
 
         private readonly Dictionary<int, Type> playMap = new Dictionary<int, Type>
         {
@@ -210,6 +223,110 @@ namespace MoBot.Core.Net
             var packet = Activator.CreateInstance(packetType) as Packet;
             packet?.ReadPacketData(tmp);
             return packet;
+        }*/
+
+        public Channel(State initialState = State.Login)
+        {
+            var statesCount = Enum.GetValues(typeof(State)).Length;
+            
+            forwardMaps = new Dictionary<int, Type>[statesCount];
+            backwardMaps = new Dictionary<Type, int>[statesCount];
+            for (int i = 0; i < statesCount; i++)
+            {
+                forwardMaps[i] = new Dictionary<int, Type>();
+                backwardMaps[i] = new Dictionary<Type, int>();
+            }
+            
+            ChannelState = initialState;
+        }
+
+        public void SetSource(TcpClient client)
+        {
+            this.client = client;
+            streamWrapper = new StreamWrapper(client.GetStream());
+        }
+        
+        public bool IsAlive => client.Connected;
+
+        public void SetClientPacketId<T>(State state, int id)
+        {
+            var type = typeof(T);
+            try
+            {
+                forwardMaps[(int) state].Add(id, type);
+            }
+            catch (ArgumentException)
+            {
+                Logger.Error($"Id {id} has already defined type for state {state.ToString()}");
+            }
+        }
+        
+        public void SetServerPacketId<T>(State state, int id)
+        {
+            var type = typeof(T);
+            try
+            {
+                backwardMaps[(int) state].Add(type, id);
+            }
+            catch (ArgumentException)
+            {
+                Logger.Error($"Id {id} has already defined type for state {state.ToString()}");
+            }
+        }
+        
+        public void EncriptChannel(byte[] secretKey)
+        {
+            var output = new BufferedBlockCipher(new CfbBlockCipher(new AesFastEngine(), 8));
+            output.Init(true, new ParametersWithIV(new KeyParameter(secretKey), secretKey, 0, 16));
+            var input = new BufferedBlockCipher(new CfbBlockCipher(new AesFastEngine(), 8));
+            input.Init(false, new ParametersWithIV(new KeyParameter(secretKey), secretKey, 0, 16));
+            var cipherStream = new CipherStream(client.GetStream(), input, output);
+            
+            streamWrapper = new StreamWrapper(cipherStream);
+        }
+        
+        public Packet GetPacket()
+        {
+            var length = streamWrapper.ReadVarInt();
+            var data = streamWrapper.ReadBytes(length);
+            
+            var tmp = new StreamWrapper(data);
+            var id = tmp.ReadVarInt();
+            if (!forwardMaps[(int)ChannelState].TryGetValue(id, out var packetType))
+            {
+                if (!IgnoredIds.Contains(id))
+                    Logger.Error($"Unknown packet id : {id}");
+                return null;
+            }
+            Debug.Assert(packetType != null, $"Error in getting packet {id}");
+            
+            var packet = (Packet)Activator.CreateInstance(packetType);
+            packet.ReadPacketData(tmp);
+            
+            return packet;
+        }
+
+        public void SendPacket(Packet packet)
+        {
+            if (!backwardMaps[(int)ChannelState].TryGetValue(packet.GetType(), out var id))
+            {
+                Logger.Error($"Packet {packet.GetType().Name} cant be send to server! Check packet ids settings");
+                return;
+            }
+
+            Task.Run(() =>
+            {
+                Monitor.Enter(PacketBuffer);
+                PacketBuffer.WriteVarInt(id);
+                packet.WritePacketData(PacketBuffer);
+
+                var buffer = PacketBuffer.GetBlob();
+                PacketBuffer.Clear();
+                Monitor.Exit(PacketBuffer);
+
+                streamWrapper.WriteVarInt(buffer.Length);
+                streamWrapper.WriteBytes(buffer);
+            });
         }
     }
 }

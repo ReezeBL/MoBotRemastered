@@ -25,7 +25,7 @@ namespace MoBot.Core.Net.Handlers
                     var version = payload.ReadByte();
                     answer.WriteByte(1);
                     answer.WriteByte(version);
-                    baseInstance.NetworkManager.AddToSendingQueue(new PacketCustomPayload
+                    baseInstance.ConnectionChannel.SendPacket(new PacketCustomPayload
                     {
                         Channel = "FML|HS",
                         Payload = answer.GetBlob()
@@ -39,7 +39,7 @@ namespace MoBot.Core.Net.Handlers
                         answer.WriteString(modInfo.modid);
                         answer.WriteString(modInfo.version);
                     }
-                    baseInstance.NetworkManager.AddToSendingQueue(new PacketCustomPayload
+                    baseInstance.ConnectionChannel.SendPacket(new PacketCustomPayload
                     {
                         Channel = "FML|HS",
                         Payload = answer.GetBlob()
@@ -51,7 +51,7 @@ namespace MoBot.Core.Net.Handlers
                     var answer = new StreamWrapper();
                     answer.WriteByte(255);
                     answer.WriteByte(2);
-                    baseInstance.NetworkManager.AddToSendingQueue(new PacketCustomPayload
+                    baseInstance.ConnectionChannel.SendPacket(new PacketCustomPayload
                     {
                         Channel = "FML|HS",
                         Payload = answer.GetBlob()
@@ -75,7 +75,7 @@ namespace MoBot.Core.Net.Handlers
                             Logger.Info($"Unhandled Ack Stage : {stage}");
                             break;
                     }
-                    baseInstance.NetworkManager.AddToSendingQueue(new PacketCustomPayload
+                    baseInstance.ConnectionChannel.SendPacket(new PacketCustomPayload
                     {
                         Channel = "FML|HS",
                         Payload = answer.GetBlob()

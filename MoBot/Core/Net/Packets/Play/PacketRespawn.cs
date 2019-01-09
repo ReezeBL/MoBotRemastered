@@ -10,7 +10,7 @@ namespace MoBot.Core.Net.Packets.Play
         public string LevelType;
         public int WorldType;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketRespawn(this);
         }

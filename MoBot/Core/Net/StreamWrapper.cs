@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MoBot.Core.Net
 {
@@ -11,11 +12,6 @@ namespace MoBot.Core.Net
         private readonly BinaryReader reader;
         private readonly BinaryWriter writer;
 
-        public struct Buffer
-        {
-            public long ActualLength;
-            public byte[] Bytes;
-        }
         public StreamWrapper()
         {
             reader = new BinaryReader(stream);
@@ -45,9 +41,7 @@ namespace MoBot.Core.Net
                 result |= (nextByte & 127) << length++ * 7;
 
                 if (length > 5)
-                {
                     throw new IOException("VarInt too big");
-                }
             }
             while ((nextByte & 128) == 128);
 
@@ -90,10 +84,7 @@ namespace MoBot.Core.Net
         {
             writer.Write(val);
         }
-        public void WriteBytes(Buffer val)
-        {
-            writer.Write(val.Bytes, 0, (int)val.ActualLength);
-        }
+
         public byte[] ReadBytes(int len)
         {
             return reader.ReadBytes(len);
@@ -181,8 +172,7 @@ namespace MoBot.Core.Net
 
         public void Clear()
         {
-            var t = stream.FlushAsync();
-            t.Wait();
+            stream.Flush();
         }
         public Stream GetStream()
         {

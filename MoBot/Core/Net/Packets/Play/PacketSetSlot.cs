@@ -9,7 +9,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte WindowId;
         public short Slot;
         public ItemStack ItemStack;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketSetSlot(this);
         }

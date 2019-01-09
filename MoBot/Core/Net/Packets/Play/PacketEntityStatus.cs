@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
     {
         public int EntityId;
         public byte EntityStatus;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketEntityStatus(this);
         }

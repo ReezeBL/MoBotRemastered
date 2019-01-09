@@ -1,12 +1,10 @@
 ﻿using fNbt;
 using MoBot.Core.GameData;
-using MoBot.Core.Net.Handlers;
 
 namespace MoBot.Core.Net
 {
-    internal abstract class Packet
+    public abstract class Packet
     {
-        public abstract void HandlePacket(IHandler handler);
         public abstract void ReadPacketData(StreamWrapper buff);
         public abstract void WritePacketData(StreamWrapper buff);
 

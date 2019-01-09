@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Handshake
     {
         public string JsonResponse;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

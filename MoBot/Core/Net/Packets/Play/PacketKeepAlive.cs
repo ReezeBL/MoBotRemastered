@@ -5,7 +5,7 @@ namespace MoBot.Core.Net.Packets.Play
     internal class PacketKeepAlive : Packet
     {
         public int Seed;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketKeepAlive(this);
         }

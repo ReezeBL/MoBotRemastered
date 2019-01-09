@@ -9,7 +9,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte Y;
         public int BlockId;
         public byte BlockMetadata;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketBlockChange(this);
         }

@@ -26,7 +26,7 @@ namespace MoBot.Core.Net.Packets.Play
             throw new NotImplementedException();
         }
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketWindowItems(this);
         }

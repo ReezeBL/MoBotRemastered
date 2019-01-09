@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
     {
         public byte Length;
         public int[] IdList;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketDestroyEntities(this);
         }

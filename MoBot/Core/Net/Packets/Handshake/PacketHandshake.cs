@@ -10,7 +10,7 @@ namespace MoBot.Core.Net.Packets.Handshake
         public ushort Port;
         public int NextState;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

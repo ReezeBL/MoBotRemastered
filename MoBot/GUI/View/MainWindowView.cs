@@ -43,7 +43,7 @@ namespace MoBot.GUI.View
         private void LoadProfile(object context)
         {
             var botInstance = new MoBase(selectedProfile.Profile);
-            botInstance.Notify += (_, e) => Console.WriteLine(e);
+            //botInstance.Notify += (_, e) => Console.WriteLine(e);
             GlobalModules.AddProfile(selectedProfile.Profile, botInstance);
             var botWindow = new BotWindow();
             botWindow.SetProfile(selectedProfile.Profile);

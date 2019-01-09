@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
         public bool Accepted { get; set; }
         public byte WindowId;
         public short ActionId;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketConfirmTransaction(this);
         }

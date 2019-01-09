@@ -11,7 +11,7 @@ namespace MoBot.Core.Net.Packets.Play
         public byte Face;
 
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

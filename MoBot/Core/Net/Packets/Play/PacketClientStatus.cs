@@ -7,7 +7,7 @@ namespace MoBot.Core.Net.Packets.Play
     {
         public byte Action = 0;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

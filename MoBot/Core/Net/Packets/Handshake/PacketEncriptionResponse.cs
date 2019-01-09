@@ -9,7 +9,7 @@ namespace MoBot.Core.Net.Packets.Handshake
         public byte[] SharedSecret = null;
         public int TokenLength = 0;
         public byte[] Token = null;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             throw new NotImplementedException();
         }

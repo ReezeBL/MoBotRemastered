@@ -12,7 +12,7 @@ namespace MoBot.Core.Net.Packets.Play
         public bool HasCustomInventory;
         public int EntityId;
 
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketOpenWindow(this);
         }

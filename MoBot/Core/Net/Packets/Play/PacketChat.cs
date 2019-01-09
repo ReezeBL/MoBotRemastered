@@ -5,7 +5,7 @@ namespace MoBot.Core.Net.Packets.Play
     internal class PacketChat : Packet
     {
         public string Message;
-        public override void HandlePacket(IHandler handler)
+        public virtual void HandlePacket(IHandler handler)
         {
             handler.HandlePacketChat(this);
         }
